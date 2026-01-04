@@ -1,35 +1,115 @@
-@if ($errors->any())
-    <div style="color:red;">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+@extends('layouts.app')
+
+@section('content')
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="h4 mb-0">Edit Member</h1>
+            </div>
+            <div class="card-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <h5 class="alert-heading">Please fix the following errors:</h5>
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('members.update', $member) }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" 
+                               class="form-control @error('name') is-invalid @enderror" 
+                               id="name" 
+                               name="name"
+                               value="{{ old('name', $member->name) }}"
+                               required>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" 
+                               class="form-control @error('email') is-invalid @enderror" 
+                               id="email" 
+                               name="email"
+                               value="{{ old('email', $member->email) }}"
+                               required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="profession" class="form-label">Profession</label>
+                        <input type="text" 
+                               class="form-control @error('profession') is-invalid @enderror" 
+                               id="profession" 
+                               name="profession"
+                               value="{{ old('profession', $member->profession) }}">
+                        @error('profession')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="company" class="form-label">Company</label>
+                        <input type="text" 
+                               class="form-control @error('company') is-invalid @enderror" 
+                               id="company" 
+                               name="company"
+                               value="{{ old('company', $member->company) }}">
+                        @error('company')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="linkedin_url" class="form-label">LinkedIn URL</label>
+                        <input type="text" 
+                               class="form-control @error('linkedin_url') is-invalid @enderror" 
+                               id="linkedin_url" 
+                               name="linkedin_url"
+                               value="{{ old('linkedin_url', $member->linkedin_url) }}"
+                               placeholder="https://linkedin.com/in/...">
+                        @error('linkedin_url')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select @error('status') is-invalid @enderror" 
+                                id="status" 
+                                name="status">
+                            <option value="active" {{ old('status', $member->status) == 'active' ? 'selected' : '' }}>
+                                Active
+                            </option>
+                            <option value="inactive" {{ old('status', $member->status) == 'inactive' ? 'selected' : '' }}>
+                                Inactive
+                            </option>
+                        </select>
+                        @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ route('members.index') }}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Update Member</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-@endif
-
-<h1>Edit Member</h1>
-
-<form method="POST" action="{{ route('members.update', $member) }}">
-    @csrf
-    @method('PUT')
-
-    Name: <input type="text" name="name" value="{{ $member->name }}"><br>
-    Email: <input type="email" name="email" value="{{ $member->email }}"><br>
-    Profession: <input type="text" name="profession" value="{{ $member->profession }}"><br>
-    Company: <input type="text" name="company" value="{{ $member->company }}"><br>
-    LinkedIn: <input type="text" name="linkedin_url" value="{{ $member->linkedin_url }}"><br>
-    <label>Status:</label>
-    <select name="status">
-        <option value="active" {{ $member->status == 'active' ? 'selected' : '' }}>
-            Active
-        </option>
-        <option value="inactive" {{ $member->status == 'inactive' ? 'selected' : '' }}>
-            Inactive
-        </option>
-    </select>
-    <br><br>
-    <button type="submit">Update</button>
-</form>
-
-<a href="{{ route('members.index') }}">Back to Members List</a>
+</div>
+@endsection

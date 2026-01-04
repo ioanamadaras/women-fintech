@@ -1,29 +1,71 @@
-@if ($errors->any())
-    <div style="color:red;">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+@extends('layouts.app')
+
+@section('content')
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="h4 mb-0">Add Event</h1>
+            </div>
+            <div class="card-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <h5 class="alert-heading">Please fix the following errors:</h5>
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('events.store') }}">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" 
+                               class="form-control @error('name') is-invalid @enderror" 
+                               id="name" 
+                               name="name"
+                               value="{{ old('name') }}"
+                               required>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="event_date" class="form-label">Date <span class="text-danger">*</span></label>
+                        <input type="date" 
+                               class="form-control @error('event_date') is-invalid @enderror" 
+                               id="event_date" 
+                               name="event_date"
+                               value="{{ old('event_date') }}"
+                               required>
+                        @error('event_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control @error('description') is-invalid @enderror" 
+                                  id="description" 
+                                  name="description"
+                                  rows="4">{{ old('description') }}</textarea>
+                        @error('description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ route('events.index') }}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-@endif
-
-
-<h1>Add Event</h1>
-
-<form method="POST" action="{{ route('events.store') }}">
-    @csrf
-
-    Name:<br>
-    <input type="text" name="name"><br><br>
-
-    Date:<br>
-    <input type="date" name="event_date"><br><br>
-
-    Description:<br>
-    <textarea name="description"></textarea><br><br>
-
-    <button type="submit">Save</button>
-</form>
-
-<a href="{{ route('events.index') }}">Back</a>
+</div>
+@endsection
